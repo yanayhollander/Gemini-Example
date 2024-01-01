@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -6,12 +8,16 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+val properties = Properties().apply {
+    load(rootProject.file("local.properties").reader())
+}
+
 android {
-    namespace = "com.hollander.template"
+    namespace = "com.hollander.geminiExample"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.hollander.template"
+        applicationId = "com.hollander.geminiExample"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -21,6 +27,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "apiKey", "" + properties.getProperty("apiKey"))
     }
 
     buildTypes {
@@ -98,6 +106,11 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-firestore")
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // add the dependency for the Google AI client SDK for Android
+    implementation("com.google.ai.client.generativeai:generativeai:0.1.1")
 }
 
 // Allow references to generated code
