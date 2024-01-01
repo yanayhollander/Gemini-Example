@@ -56,14 +56,14 @@ import kotlinx.coroutines.launch
 internal fun PhotoReasoningRoute(
     viewModel: PhotoReasoningViewModel = hiltViewModel<PhotoReasoningViewModel>()
 ) {
-    val photoReasoningUiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
     val imageRequestBuilder = ImageRequest.Builder(LocalContext.current)
     val imageLoader = ImageLoader.Builder(LocalContext.current).build()
 
     PhotoReasoningScreen(
-        uiState = photoReasoningUiState,
+        uiState = uiState,
         onReasonClicked = { inputText, selectedItems ->
             coroutineScope.launch {
                 val bitmaps = selectedItems.mapNotNull {
@@ -92,7 +92,7 @@ internal fun PhotoReasoningRoute(
 
 @Composable
 fun PhotoReasoningScreen(
-    uiState: PhotoReasoningUiState = PhotoReasoningUiState.Loading,
+    uiState: UiState = UiState.Loading,
     onReasonClicked: (String, List<Uri>) -> Unit = { _, _ -> }
 ) {
     var userQuestion by rememberSaveable { mutableStateOf("") }
@@ -168,11 +168,12 @@ fun PhotoReasoningScreen(
             }
         }
         when (uiState) {
-            PhotoReasoningUiState.Initial -> {
+            UiState.Idle -> {
                 // Nothing is shown
             }
 
-            PhotoReasoningUiState.Loading -> {
+
+            UiState.Loading -> {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -183,7 +184,7 @@ fun PhotoReasoningScreen(
                 }
             }
 
-            is PhotoReasoningUiState.Success -> {
+            is UiState.Success -> {
                 Card(
                     modifier = Modifier
                         .padding(vertical = 16.dp)
@@ -219,7 +220,7 @@ fun PhotoReasoningScreen(
                 }
             }
 
-            is PhotoReasoningUiState.Error -> {
+            is UiState.Error -> {
                 Card(
                     modifier = Modifier
                         .padding(vertical = 16.dp)

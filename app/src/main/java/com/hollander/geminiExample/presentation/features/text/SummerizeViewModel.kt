@@ -2,7 +2,8 @@ package com.hollander.geminiExample.presentation.features.text
 
 import com.google.ai.client.generativeai.GenerativeModel
 import com.hollander.geminiExample.di.GeminiPro
-import com.hollander.geminiExample.presentation.viewModel.AsyncViewModel
+import com.hollander.geminiExample.presentation.BaseViewModel
+import com.hollander.geminiExample.presentation.features.multimodal.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,10 +13,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SummarizeViewModel @Inject constructor(
     @GeminiPro private val generativeModel: GenerativeModel
-) : AsyncViewModel() {
+) : BaseViewModel() {
 
     private val _uiState: MutableStateFlow<SummarizeUiState> =
-        MutableStateFlow(SummarizeUiState.Initial)
+        MutableStateFlow(SummarizeUiState.Idle)
     val uiState: StateFlow<SummarizeUiState> =
         _uiState.asStateFlow()
 
@@ -41,10 +42,19 @@ class SummarizeViewModel @Inject constructor(
                 }
         }
     }
+
+    override fun isLoading() {
+        _uiState.value = SummarizeUiState.Loading
+    }
+
+    override fun onError(errorMessage: String) {
+        _uiState.value = SummarizeUiState.Error(errorMessage)
+    }
 }
 
 sealed interface SummarizeUiState {
-    data object Initial: SummarizeUiState
+    data object Idle: SummarizeUiState
+    data object Loading: SummarizeUiState
     data class Success(val outputText: String): SummarizeUiState
     data class Error(val errorMessage: String): SummarizeUiState
 }

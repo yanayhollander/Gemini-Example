@@ -2,24 +2,22 @@ package com.hollander.geminiExample.presentation.features.chat
 
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
-import com.hollander.geminiExample.presentation.viewModel.AsyncViewModel
+import com.hollander.geminiExample.presentation.BaseViewModel
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.asTextOrNull
 import com.google.ai.client.generativeai.type.content
 import com.hollander.geminiExample.di.GeminiPro
-import com.hollander.geminiExample.di.GeminiVision
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     @GeminiPro generativeModel: GenerativeModel
-) : AsyncViewModel() {
+) : BaseViewModel() {
 
     private val chat = generativeModel.startChat(
         history = listOf(
@@ -66,15 +64,23 @@ class ChatViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.value.replaceLastPendingMessage()
-                _uiState.value.addMessage(
-                    ChatMessage(
-                        text = "" + e.localizedMessage,
-                        participant = Participant.ERROR
-                    )
-                )
+                onError("" + e.localizedMessage)
             }
         }
+    }
+
+    override fun isLoading() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onError(errorMessage: String) {
+        _uiState.value.replaceLastPendingMessage()
+        _uiState.value.addMessage(
+            ChatMessage(
+                text = errorMessage,
+                participant = Participant.ERROR
+            )
+        )
     }
 }
 

@@ -43,25 +43,19 @@ internal fun SummarizeRoute(
     summarizeViewModel: SummarizeViewModel = hiltViewModel<SummarizeViewModel>()
 ) {
     val summarizeUiState by summarizeViewModel.uiState.collectAsState()
-    val isLoading = summarizeViewModel.isLoading.observeAsState(false)
 
-    SummarizeScreen(isLoading, summarizeUiState, onSummarizeClicked = { inputText ->
+
+    SummarizeScreen(summarizeUiState, onSummarizeClicked = { inputText ->
         summarizeViewModel.summarizeStreaming(inputText)
     })
 }
 
 @Composable
 fun SummarizeScreen(
-    isLoading: State<Boolean> = mutableStateOf(false),
-    uiState: SummarizeUiState = SummarizeUiState.Initial,
+    uiState: SummarizeUiState = SummarizeUiState.Idle,
     onSummarizeClicked: (String) -> Unit = {}
 ) {
     var textToSummarize by rememberSaveable { mutableStateOf("") }
-
-    if (isLoading.value) {
-        Loading()
-        return
-    }
 
     Column(
         modifier = Modifier
@@ -97,8 +91,12 @@ fun SummarizeScreen(
         }
 
         when (uiState) {
-            SummarizeUiState.Initial -> {
+            SummarizeUiState.Idle -> {
                 // Nothing is shown
+            }
+
+            SummarizeUiState.Loading -> {
+                Loading()
             }
 
             is SummarizeUiState.Success -> {
