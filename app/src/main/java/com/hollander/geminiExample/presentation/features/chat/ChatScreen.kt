@@ -37,8 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.ai.client.generativeai.GenerativeModel
 import com.hollander.geminiExample.R
 import kotlinx.coroutines.launch
 
@@ -200,4 +202,14 @@ fun MessageInput(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun ChatBubbleItemPreview() {
+    ChatRoute(
+        chatViewModel = ChatViewModel(
+            GenerativeModel("", "")
+        )
+    )
 }

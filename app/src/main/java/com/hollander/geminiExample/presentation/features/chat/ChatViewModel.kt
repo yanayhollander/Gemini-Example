@@ -2,11 +2,11 @@ package com.hollander.geminiExample.presentation.features.chat
 
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
-import com.hollander.geminiExample.presentation.BaseViewModel
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.asTextOrNull
 import com.google.ai.client.generativeai.type.content
 import com.hollander.geminiExample.di.GeminiPro
+import com.hollander.geminiExample.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
