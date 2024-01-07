@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Android Template"
+rootProject.name = "Gemini Example"
 include(":app")

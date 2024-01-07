@@ -22,8 +22,6 @@ abstract class BaseViewModel : ViewModel() {
                 block(this)
             } catch (e: Exception) {
                 onError("${e.message}")
-            } finally {
-                idle()
             }
         }
     }
